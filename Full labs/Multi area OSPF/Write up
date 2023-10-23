@@ -1,0 +1,319 @@
+
+Purpose
+This lab’s first objective was to set up a topology for a multiarea ospf network, the second objective was to make the network with 5 routers and 3 different areas. The purpose of this lab was to get us refamiliarized with ospf networks and the general basics of the rack. Running multi area OSPF allows ipv4 and ipv6 to run simultaneously, both are needed because it allows us to connect to a larger group of devices and lets the efficiency and the new security features of ipv6 to be used while letting us connect to devices which lack ipv6
+Background information on lab concepts
+the Purpose of using ospf (open shortest path first) which allows the routers to find the shortest path to the destination using the link state advertisements which minimizes the bandwidth used, it allows for smaller scalability and can be used to reduce the size of routing tables. OSPF can also be used to break up flooding domains and it being able to help with redundancy. With OSPF being an open standard, it does not need any other software to have it run unlike EIRGP which is a cisco proprietary, A few use cases for OSPF would be for campus networks or internal corporate networks like workplaces while not being scalable enough for the intranet for workers.
+Lab summary
+In this lab we set up multiarea OSPF with 3 different areas and using 5 different routers, we were tasked to set up communication via ipv4 and ipv6. Using network statements, the routers were given OSPF routes which allows them to communicate with each other across the different areas
+Lab Commands
+Network Command 
+  The network number of all adjacent links to the current router. These networks are distributed as routes in ospf once adjacency has been established. 
+Ip ospf (process id) area (area) 
+  Configures ipv6 routing and distributes ipv6 networks. 
+Router-id 
+  Router-id is used during the OSPF election process to determine the DR.
+Network diagrams with IP’s
+ 
+Configuration
+R1 
+      192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.1.0/24 is directly connected, GigabitEthernet0/0/0 
+L        192.168.1.1/32 is directly connected, GigabitEthernet0/0/0 
+      192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.2.0/24 is directly connected, GigabitEthernet0/0/1 
+L        192.168.2.1/32 is directly connected, GigabitEthernet0/0/1 
+O IA  192.168.3.0/24 [110/2] via 192.168.1.2, 00:21:19, GigabitEthernet0/0/0 
+O IA  192.168.4.0/24 [110/2] via 192.168.2.2, 00:17:02, GigabitEthernet0/0/1 
+      192.168.5.0/32 is subnetted, 1 subnets 
+O IA     192.168.5.1 [110/3] via 192.168.1.2, 00:21:05, GigabitEthernet0/0/0 
+      192.168.6.0/32 is subnetted, 1 subnets 
+O IA     192.168.6.1 [110/3] via 192.168.2.2, 00:16:27, GigabitEthernet0/0/1 
+ 
+R2 
+O     192.168.1.0/24 [110/2] via 192.168.2.1, 00:22:11, GigabitEthernet0/0/1 
+      192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.2.0/24 is directly connected, GigabitEthernet0/0/1 
+L        192.168.2.2/32 is directly connected, GigabitEthernet0/0/1 
+O IA  192.168.3.0/24 [110/3] via 192.168.2.1, 00:22:11, GigabitEthernet0/0/1 
+      192.168.4.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.4.0/24 is directly connected, GigabitEthernet0/0/0 
+L        192.168.4.1/32 is directly connected, GigabitEthernet0/0/0 
+      192.168.5.0/32 is subnetted, 1 subnets 
+O IA     192.168.5.1 [110/4] via 192.168.2.1, 00:22:11, GigabitEthernet0/0/1 
+      192.168.6.0/32 is subnetted, 1 subnets 
+O        192.168.6.1 [110/2] via 192.168.4.2, 00:21:26, GigabitEthernet0/0/0 
+R3 
+      192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.1.0/24 is directly connected, GigabitEthernet0/0/0 
+L        192.168.1.2/32 is directly connected, GigabitEthernet0/0/0 
+O     192.168.2.0/24 [110/2] via 192.168.1.1, 00:27:24, GigabitEthernet0/0/0 
+      192.168.3.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.3.0/24 is directly connected, GigabitEthernet0/0/1 
+L        192.168.3.1/32 is directly connected, GigabitEthernet0/0/1 
+O IA  192.168.4.0/24 [110/3] via 192.168.1.1, 00:23:07, GigabitEthernet0/0/0 
+      192.168.5.0/32 is subnetted, 1 subnets 
+O        192.168.5.1 [110/2] via 192.168.3.2, 00:27:10, GigabitEthernet0/0/1 
+      192.168.6.0/32 is subnetted, 1 subnets 
+O IA     192.168.6.1 [110/4] via 192.168.1.1, 00:22:32, GigabitEthernet0/0/0 
+ 
+R4 
+ 
+O IA  192.168.1.0/24 [110/3] via 192.168.4.1, 00:25:04, GigabitEthernet0/0/0 
+O IA  192.168.2.0/24 [110/2] via 192.168.4.1, 00:25:04, GigabitEthernet0/0/0 
+O IA  192.168.3.0/24 [110/4] via 192.168.4.1, 00:25:04, GigabitEthernet0/0/0 
+      192.168.4.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.4.0/24 is directly connected, GigabitEthernet0/0/0 
+L        192.168.4.2/32 is directly connected, GigabitEthernet0/0/0 
+      192.168.5.0/32 is subnetted, 1 subnets 
+O IA     192.168.5.1 [110/5] via 192.168.4.1, 00:25:04, GigabitEthernet0/0/0 
+      192.168.6.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.6.0/24 is directly connected, Loopback0 
+L        192.168.6.1/32 is directly connected, Loopback0 
+R5: 
+O IA  192.168.1.0/24 [110/2] via 192.168.3.1, 00:30:35, GigabitEthernet0/0/0 
+O IA  192.168.2.0/24 [110/3] via 192.168.3.1, 00:30:35, GigabitEthernet0/0/0 
+      192.168.3.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.3.0/24 is directly connected, GigabitEthernet0/0/0 
+L        192.168.3.2/32 is directly connected, GigabitEthernet0/0/0 
+O IA  192.168.4.0/24 [110/4] via 192.168.3.1, 00:26:27, GigabitEthernet0/0/0 
+      192.168.5.0/24 is variably subnetted, 2 subnets, 2 masks 
+C        192.168.5.0/24 is directly connected, Loopback0 
+L        192.168.5.1/32 is directly connected, Loopback0 
+      192.168.6.0/32 is subnetted, 1 subnets 
+O IA     192.168.6.1 [110/5] via 192.168.3.1, 00:25:52, GigabitEthernet0/0/0 
+ 
+ 
+Configuration: 
+ 
+R1: 
+ 
+Ipv6 unicast-routing 
+interface GigabitEthernet0/0/0 
+ip address 192.168.1.1 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:A1::1/64 
+ipv6 ospf 1 area 0 
+! 
+interface GigabitEthernet0/0/1 
+ip address 192.168.2.1 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:B1::1/64 
+ipv6 ospf 1 area 0 
+! 
+interface Serial0/1/0 
+! 
+interface Serial0/1/1 
+! 
+interface GigabitEthernet0 
+vrf forwarding Mgmt-intf 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface Vlan1 
+no ip address 
+shutdown 
+! 
+router ospf 1 
+router-id 1.1.1.1 
+network 192.168.1.0 0.0.0.255 area 0 
+network 192.168.2.0 0.0.0.255 area 0 
+! 
+ip forward-protocol nd 
+no ip http server 
+no ip http secure-server 
+ip tftp source-interface GigabitEthernet0 
+! 
+ipv6 router ospf 1 
+router-id 1.1.1.1 
+ 
+R2 
+Ipv6 unicast-routing 
+interface GigabitEthernet0/0/0 
+ip address 192.168.4.1 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:C1::1/64 
+ipv6 ospf 1 area 2 
+! 
+interface GigabitEthernet0/0/1 
+ip address 192.168.2.2 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:B1::2/64 
+ipv6 ospf 1 area 0 
+! 
+interface GigabitEthernet0/1/0 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface GigabitEthernet0/1/1 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface GigabitEthernet0 
+vrf forwarding Mgmt-intf 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface Vlan1 
+no ip address 
+shutdown 
+! 
+router ospf 10 
+router-id 2.2.2.2 
+network 192.168.2.0 0.0.0.255 area 0 
+network 192.168.4.0 0.0.0.255 area 2 
+! 
+ip forward-protocol nd 
+no ip http server 
+no ip http secure-server 
+ip tftp source-interface GigabitEthernet0 
+! 
+! 
+ipv6 router ospf 1 
+router-id 2.2.2.2 
+ 
+R3 
+Ipv6 unicast-routing 
+interface GigabitEthernet0/0/0 
+ip address 192.168.1.2 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:A1::2/64 
+ipv6 ospf 1 area 0 
+! 
+interface GigabitEthernet0/0/1 
+ip address 192.168.3.1 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:D1::1/64 
+ipv6 ospf 1 area 1 
+! 
+interface Serial0/1/0 
+no ip address 
+shutdown 
+! 
+interface Serial0/1/1 
+no ip address 
+shutdown 
+! 
+interface GigabitEthernet0 
+vrf forwarding Mgmt-intf 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface Vlan1 
+no ip address 
+shutdown 
+! 
+router ospf 1 
+router-id 3.3.3.3 
+network 192.168.1.0 0.0.0.255 area 0 
+network 192.168.3.0 0.0.0.255 area 1 
+! 
+R4 
+Ipv6 unicast-routing 
+interface Loopback0 
+ip address 192.168.6.1 255.255.255.0 
+ipv6 address 2001:DB8:F1::1/64 
+ipv6 ospf 1 area 2 
+! 
+interface GigabitEthernet0/0/0 
+ip address 192.168.4.2 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:C1::2/64 
+ipv6 ospf 1 area 2 
+! 
+interface GigabitEthernet0/0/1 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface Serial0/1/0 
+! 
+interface Serial0/1/1 
+! 
+interface GigabitEthernet0 
+vrf forwarding Mgmt-intf 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface Vlan1 
+no ip address 
+shutdown 
+! 
+router ospf 10 
+router-id 4.4.4.4 
+network 192.168.4.0 0.0.0.255 area 2 
+network 192.168.6.0 0.0.0.255 area 2 
+! 
+ip forward-protocol nd 
+no ip http server 
+no ip http secure-server 
+ip tftp source-interface GigabitEthernet0 
+! 
+! 
+ipv6 router ospf 1 
+router-id 4.4.4.4 
+ 
+R5 
+Ipv6 unicast-routing 
+interface Loopback0 
+ip address 192.168.5.1 255.255.255.0 
+ipv6 address 2001:DB8:E1::1/64 
+ipv6 ospf 1 area 1 
+! 
+interface GigabitEthernet0/0/0 
+ip address 192.168.3.2 255.255.255.0 
+negotiation auto 
+ipv6 address 2001:DB8:D1::2/64 
+ipv6 ospf 1 area 1 
+! 
+interface GigabitEthernet0/0/1 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+interface Serial0/1/0 
+no ip address 
+shutdown 
+! 
+interface Serial0/1/1 
+no ip address 
+shutdown 
+! 
+interface GigabitEthernet0 
+vrf forwarding Mgmt-intf 
+no ip address 
+shutdown 
+negotiation auto 
+! 
+router ospf 1 
+router-id 5.5.5.5 
+network 192.168.3.0 0.0.0.255 area 1 
+network 192.168.5.0 0.0.0.255 area 1 
+! 
+ip forward-protocol nd 
+ip http server 
+ip http authentication local 
+ip http secure-server 
+ip tftp source-interface GigabitEthernet0 
+! 
+! 
+ipv6 router ospf 1 
+router-id 5.5.5.5 
+! 
+! 
+! 
+! 
+!
+
+Problems
+Some of the biggest problems our group faced was the ipv4 subnetting with us getting too complex with the subnetting which caused us to mess up the network commands, it was an easy fix just by changing the subnetting to be more concise and consistent across our topologies 
+Conclusion
+While different methods of connection like static routes, EIRGP and others during this lab, we learned the pros and cons of using OSPF and in what cases OSPF should be used in. A few things we did wrong was over complicating the subnets which caused us some grief, but we learned keep it simple which let us be more efficient with our time and not having to fight with our subnetting. After we fixed and maintained the documentation of the routing table, IPv6 was quickly done with little issues due to the new routing table.
+
+Sign off
+
