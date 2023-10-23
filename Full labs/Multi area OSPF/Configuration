@@ -1,0 +1,197 @@
+R1 192.168.1.0 255.255.255.0 g0/0/0
+R1 192.168.2.0 255.255.255.0 g0/0/1
+R2 192.168.2.0 255.255.255.0 g0/0/1
+R2 192.168.4.0 255.255.255.0 g0/0/0
+R3 192.168.3.0 255.255.255.0 g0/0/1
+R3 192.168.1.0 255.255.255.0 g0/0/0
+R4 192.168.4.0 255.255.255.0 g0/0/0
+R4 192.168.6.0 255.255.255.0 Lo0
+R5 192.168.3.0 255.255.255.0 g0/0/0
+R5 192.168.5.0 255.255.255.0 Lo0
+
+
+R1
+
+en
+conf t
+ host R1
+ int g0/0/0
+  ip add 192.168.1.1 255.255.255.0
+  no shut
+  int g0/0/1
+  ip add 192.168.2.1 255.255.255.0
+  no shut
+  exi
+ router ospf 1
+  router-id 1.1.1.1
+  network 192.168.1.0 0.0.0.255 area 0
+  network 192.168.2.0 0.0.0.255 area 0
+  end
+
+R2
+
+en
+conf t
+ host R2
+ int g0/0/0
+  ip add 192.168.4.1 255.255.255.0
+  no shut
+  int g0/0/1
+  ip add 192.168.2.2 255.255.255.0
+  no shut
+  exi
+ router ospf 10
+  router-id 2.2.2.2
+  network 192.168.2.0 0.0.0.255 area 0
+  network 192.168.4.0 0.0.0.255 area 2
+  end
+
+R3
+
+en
+conf t
+ host R3
+ int g0/0/0
+  ip add 192.168.1.2 255.255.255.0
+  no shut
+  int g0/0/1
+  ip add 192.168.3.1 255.255.255.0
+  no shut
+  exi
+ router ospf 1
+  router-id 3.3.3.3
+  network 192.168.3.0 0.0.0.255 area 1
+  network 192.168.1.0 0.0.0.255 area 0
+  end
+
+R4
+
+en
+conf t
+ host R4
+ int g0/0/0
+  ip add 192.168.4.2 255.255.255.0
+  no shut
+ int Lo0
+  ip add 192.168.6.1 255.255.255.0
+  no shut
+  exi
+ router ospf 10
+  router-id 4.4.4.4
+  network 192.168.4.0 0.0.0.255 area 2
+  network 192.168.6.0 0.0.0.255 area 2
+ end
+
+R5
+
+en
+conf t
+ host R5
+ int g0/0/0
+  ip add 192.168.3.2 255.255.255.0
+  no shut
+ int Lo0
+  ip add 192.168.5.1 255.255.255.0
+  no shut
+  exi
+ router ospf 1
+ router-id 5.5.5.5
+ network 192.168.3.0 0.0.0.255 area 1
+ network 192.168.5.0 0.0.0.255 area 1
+ end
+
+
+
+R1 2001:db8:A1::1/64 g0/0
+R1 2001:db8:B1::1/64 g0/1
+R2 2001:db8:C1::1/64 g0/0
+R2 2001:db8:B1::2/64 g0/1
+R3 2001:db8:A1::2/64 g0/0
+R3 2001:db8:D1::1/64 g0/1
+R4 2001:db8:C1::2/64 g0/0
+R4 2001:db8:F1::1/64 Lo0
+R5 2001:db8:D1::2/64 g0/1
+R5 2001:db8:E1::1/64 Lo0
+
+R1
+
+en
+conf t
+ ipv6 unicast-routing
+ ipv6 router ospf 1
+  router-id 1.1.1.1
+  exi
+ int g0/0/0
+    ipv6 add 2001:db8:A1::1/64
+    ipv6 ospf 1 area 0
+  int g0/0/1
+    ipv6 add 2001:db8:B1::1/64
+    ipv6 ospf 1 area 0
+  end
+
+R2
+ 
+en 
+conf t
+ ipv6 unicast-routing
+ ipv6 router ospf 1
+  router-id 2.2.2.2
+  exi
+ int g0/0/1
+    ipv6 add 2001:db8:B1::2/64
+    ipv6 ospf 1 area 0
+  int g0/0/0
+    ipv6 add 2001:db8:C1::1/64
+    ipv6 ospf 1 area 2
+  end
+
+R3
+
+en
+conf t
+ ipv6 unicast-routing
+ ipv6 router ospf 1
+  router-id 3.3.3.3
+  exi
+ int g0/0/0
+   ipv6 add 2001:db8:A1::2/64
+   ipv6 ospf 1 area 0
+  int g0/0/1
+   ipv6 add 2001:db8:D1::1/64
+   ipv6 ospf 1 area 1
+  end
+
+R4
+
+en
+conf t
+ ipv6 unicast-routing
+ ipv6 router ospf 1
+  router-id 4.4.4.4
+  exi
+ int g0/0/0
+   ipv6 add 2001:db8:C1::2/64
+   ipv6 ospf 1 area 2
+  int Lo0
+   ipv6 add 2001:db8:F1::1/64
+   ipv6 ospf 1 area 2
+  end
+
+R5
+
+en
+conf t
+ ipv6 unicast-routing
+ ipv6 router ospf 1
+  router-id 5.5.5.5
+  exi
+ int g0/0/0
+   ipv6 add 2001:db8:D1::2/64
+   ipv6 ospf 1 area 1
+  int Lo0
+   ipv6 add 2001:db8:E1::1/64
+   ipv6 ospf 1 area 1
+  end
+
+
+
